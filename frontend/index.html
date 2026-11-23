@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Energy Management System | Autonomous RL EMS</title>
+  <meta name="description" content="AI-Driven Smart Energy Management System using Strategic Hybrid DQN-PPO and Forecast-Assisted PPO vs Rule-Based Baseline for residential solar and battery storage.">
+  
+  <!-- Modern Typography (Outfit & Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Plotly.js for interactive analytics (local bundle with CDN fallback) -->
+  <script src="js/plotly.min.js"></script>
+  <script>
+    if (typeof Plotly === 'undefined') {
+      document.write('<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"><\/script>');
+    }
+  </script>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css?v=3.0">
+</head>
+<body>
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <!-- ==============================================================================
+       Sidebar Navigation (Clean & Structured - 4 Core Pillars)
+       ============================================================================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-text">
+        <h2>SmartEMS AI</h2>
+        <span>Autonomous Microgrid RL</span>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item active" data-tab="overview">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard & Benchmark
+      </li>
+      <li class="nav-item" data-tab="energy-flow">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Energy Flow & Decisions
+      </li>
+      <li class="nav-item" data-tab="forecasting">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+        ML Forecasting
+      </li>
+    </ul>
+
+    <div class="sidebar-status">
+      <div>System Architecture: <strong>Gymnasium + SB3</strong></div>
+      <div class="status-badge"><span class="pulse-dot"></span> RL Dual Engines Ready</div>
+    </div>
+  </aside>
+
+  <!-- ==============================================================================
+       Main Content Area
+       ============================================================================== -->
+  <main class="main-wrapper">
+    
+    <!-- Top Action Bar -->
+    <header class="top-bar">
+      <div class="top-bar-title-row">
+        <button id="sidebar-toggle" class="btn-sidebar-toggle" title="Toggle Navigation Menu" aria-label="Toggle Navigation">
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <h1>AI-Driven Smart Energy Management System</h1>
+            <span class="status-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-weight: 600; font-size: 11px;">v3.0 DQN-PPO Hybrid</span>
+          </div>
+          <p>Multi-Objective Reinforcement Learning vs. Rule-Based Energy Scheduling under Realistic TOU Tariffs</p>
+        </div>
+      </div>
+
+      <div class="control-bar">
+        <!-- Scope Switch (1-Day vs 7-Day vs 14-Day) -->
+        <div class="control-item scope-item">
+          <div class="scope-toggle" role="group" aria-label="Evaluation Scope">
+            <button id="scope-btn-day" class="scope-btn active" data-mode="day" title="Simulate 24-hour dispatch (96 15-min intervals)">
+              📅 Single Day
+            </button>
+            <button id="scope-btn-week" class="scope-btn" data-mode="7day" title="Simulate continuous 7-day test benchmark (672 intervals)">
+              📊 7-Day Benchmark
+            </button>
+            <button id="scope-btn-fortnight" class="scope-btn" data-mode="14day" title="Simulate continuous 14-day test benchmark (1,344 intervals)">
+              📈 14-Day Benchmark
+            </button>
+          </div>
+        </div>
+
+        <!-- Date Selector with info helper -->
+        <div id="date-select-container" class="date-select-wrapper">
+          <label for="date-select" class="control-label">
+            <span>OPERATING DATE</span>
+            <button type="button" id="btn-date-info" class="btn-info-icon" title="What does this date selector show? Click for technical details">ℹ️</button>
+          </label>
+          <select id="date-select" class="date-select"></select>
+        </div>
+
+        <!-- Controller View Selector Dropdown -->
+        <div id="controller-view-container" class="date-select-wrapper">
+          <label for="controller-view-select" class="control-label">
+            <span>CONTROLLER VIEW</span>
+          </label>
+          <select id="controller-view-select" class="date-select">
+            <option value="both" selected>📊 Comparative Benchmark (Rule-Based vs PPO)</option>
+            <option value="ppo">🤖 Forecast-Assisted PPO (Continuous Dispatch)</option>
+            <option value="rb">⚙️ Rule-Based EMS (Baseline)</option>
+          </select>
+        </div>
+
+        <div class="control-action-group">
+          <button id="btn-run-comparison" class="btn-primary">
+            <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Run Comparison
+          </button>
+
+          <span id="loading-indicator" class="status-badge" style="display: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8;">
+            <span class="pulse-dot" style="background: #38bdf8;"></span> Simulating...
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Operational Context & Dataset Explanation Bar -->
+    <section class="context-bar" id="operational-context-bar">
+      <div class="context-item">
+        <span class="context-label">Scope:</span>
+        <span class="context-value" id="ctx-horizon-val">Single Day (24h / 96 steps)</span>
+      </div>
+      <div class="context-divider"></div>
+      <div class="context-item">
+        <span class="context-label">Partition:</span>
+        <span class="context-value badge-test-partition" id="ctx-partition-val">Held-Out Test Set</span>
+      </div>
+      <div class="context-divider"></div>
+      <div class="context-item">
+        <span class="context-label">Day Profile:</span>
+        <span class="context-value" id="ctx-day-val">Sunday, June 28, 2020</span>
+      </div>
+      <div class="context-divider"></div>
+      <div class="context-item">
+        <span class="context-label">Solar PV Potential:</span>
+        <span class="context-value" id="ctx-solar-val" style="color: #facc15;">15.48 kWh</span>
+      </div>
+      <div class="context-divider"></div>
+      <div class="context-item">
+        <span class="context-label">Household Load:</span>
+        <span class="context-value" id="ctx-load-val" style="color: #38bdf8;">25.37 kWh</span>
+      </div>
+    </section>
+
+    <!-- Date Explanation Modal Overlay -->
+    <div id="date-info-modal" class="info-card-overlay" style="display: none;">
+      <div class="info-card-content">
+        <div class="info-card-header">
+          <h3>ℹ️ Microgrid Dataset & Partitioning Information</h3>
+          <button id="btn-close-date-info" class="btn-close-info">&times;</button>
+        </div>
+        <div class="info-card-body">
+          <p>
+            <strong>1. Exact 15-Minute Historical Operating Profiles:</strong><br>
+            Each selectable date loads real-world, synchronized solar generation (<em>P</em><sub>solar</sub>) and household load demand (<em>P</em><sub>load</sub>) sampled at 15-minute intervals across 24 hours (96 discrete decision timesteps).
+          </p>
+          <p>
+            <strong>2. Clean Data Split (Zero Contamination):</strong><br>
+            Dates labeled <span class="badge-test-partition">Held-Out Test Set</span> are strictly isolated from training. Neither PPO nor Hybrid DQN-PPO ever saw these profiles during policy optimization.
+          </p>
+          <p>
+            <strong>3. Strict Scientific Parity:</strong><br>
+            When you run an evaluation, both controllers (Rule-Based baseline and Continuous Forecast-Assisted PPO) run on the exact same mathematical environment with identical battery physics, initial SOC, and dynamic TOU tariffs.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick-Stats KPI Bar (Hero Summary Cards) -->
+    <section class="metrics-grid">
+      <div class="card card-cost">
+        <div class="metric-header">
+          <span class="metric-title" id="stat-cost-title">Total Electricity Cost</span>
+          <div class="metric-icon">💰</div>
+        </div>
+        <div class="metric-value" id="stat-ppo-cost">Rs. 0.00</div>
+        <div class="metric-sub" id="stat-cost-sub">Baseline: <strong id="stat-rb-cost" style="color: #f87171;">Rs. 0.00</strong></div>
+      </div>
+
+      <div class="card card-savings">
+        <div class="metric-header">
+          <span class="metric-title" id="stat-impact-title">RL Cost Savings</span>
+          <div class="metric-icon">📉</div>
+        </div>
+        <div class="metric-value" id="stat-impact-val"><span id="stat-cost-saving" class="status-badge">+0.0%</span></div>
+        <div class="metric-sub" id="stat-impact-sub">Zero Unserved Load & 0 Violations</div>
+      </div>
+
+      <div class="card card-solar">
+        <div class="metric-header">
+          <span class="metric-title" id="stat-solar-title">Solar Self-Consumption</span>
+          <div class="metric-icon">☀️</div>
+        </div>
+        <div class="metric-value" id="stat-solar-util">0.0%</div>
+        <div class="metric-sub" id="stat-solar-sub">Clean Zero-Emission Utilization</div>
+      </div>
+
+      <div class="card card-grid">
+        <div class="metric-header">
+          <span class="metric-title" id="stat-grid-title">Grid Import Energy</span>
+          <div class="metric-icon">🔌</div>
+        </div>
+        <div class="metric-value" id="stat-grid-energy">0.0 kWh</div>
+        <div class="metric-sub" id="stat-grid-sub">Peak Demand: <strong id="stat-peak-grid" style="color: #38bdf8;">0.0 kW</strong></div>
+      </div>
+
+      <div class="card card-load">
+        <div class="metric-header">
+          <span class="metric-title" id="stat-throughput-title">Battery Energy Cycled</span>
+          <div class="metric-icon">🔋</div>
+        </div>
+        <div class="metric-value" id="stat-throughput">0.0 kWh</div>
+        <div class="metric-sub" id="stat-throughput-sub">Peak Shaving & Arbitrage Metric</div>
+      </div>
+    </section>
+
+    <!-- Full-Day / 7-Day Playback Scrubber Bar -->
+    <div class="playback-bar">
+      <div class="playback-controls">
+        <button id="btn-restart" class="btn-secondary" title="Restart to Step 0">&#8634;</button>
+        <button id="btn-prev" class="btn-secondary" title="Previous Step">&#9664;&#9664;</button>
+        <button id="btn-play" class="play-btn" title="Play / Pause">&#9654;</button>
+        <button id="btn-next" class="btn-secondary" title="Next Step">&#9654;&#9654;</button>
+      </div>
+
+      <input type="range" id="playback-slider" class="scrubber-slider" min="0" max="95" value="0" aria-label="Simulation Step Scrubber">
+
+      <div style="display: flex; align-items: center; gap: 15px; font-size: 13px; flex-wrap: wrap;">
+        <div>Timestamp: <strong id="playback-timestamp" style="color: #38bdf8;">--:--</strong></div>
+        <div>Current Tariff: <strong id="playback-tariff" style="color: #a855f7;">Rs. 0.0/kWh</strong></div>
+        <div>Interval Cost: <strong id="playback-cost" style="color: #10b981;">Rs. 0.00</strong></div>
+        <select id="playback-speed" class="time-select" style="padding: 4px 8px; font-size: 12px;" aria-label="Playback Speed">
+          <option value="600">0.5x</option>
+          <option value="400" selected>1.0x</option>
+          <option value="200">2.0x</option>
+          <option value="80">5.0x</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ==============================================================================
+         TAB 1: DASHBOARD & COMPARATIVE BENCHMARK (All Analytics Unified)
+         ============================================================================== -->
+    <div id="tab-overview" class="tab-pane active">
+
+      <!-- Controlled 3-Way Comparative Benchmark Table -->
+      <div class="table-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h3 style="font-size: 16px; margin: 0 0 4px 0; color: #fff;">Controlled Multi-Algorithm Benchmark & Performance Audit</h3>
+            <span style="font-size: 12px; color: #94a3b8;">Identical Microgrid Constraints, Realistic Indian TOU Tariffs & Equal Initial Battery SOC</span>
+          </div>
+          <div id="winner-badge-container" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); padding: 6px 14px; border-radius: 8px;">
+            <span style="font-size: 11px; text-transform: uppercase; color: #34d399; font-weight: 700; letter-spacing: 0.5px;">Best Performer:</span>
+            <span id="winner-algo-name" style="font-size: 13px; font-weight: 700; color: #fff; margin-left: 6px;">Forecast-Assisted PPO</span>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Evaluation Metric</th>
+                <th>Rule-Based (Baseline)</th>
+                <th>Forecast-Assisted PPO</th>
+                <th>Best Performer</th>
+                <th>Delta vs Baseline</th>
+              </tr>
+            </thead>
+            <tbody id="summary-table-body">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="narrative-box">
+          <strong style="color: #38bdf8;">Comparative Analysis & Selection Rationale:</strong>
+          <p id="comparison-narrative">Evaluating PPO and Hybrid DQN-PPO against deterministic Rule-Based EMS under identical conditions...</p>
+        </div>
+      </div>
+
+      <!-- Coordinated 6-Chart Analytical Grid -->
+      <!-- Row 1: Generation/Demand & Battery Dispatch -->
+      <div class="chart-grid-2">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Solar PV Generation vs Household Load Demand</span>
+            <span class="chart-badge">Microgrid Supply & Demand</span>
+          </div>
+          <div id="chart-solar-vs-load" class="chart-container" style="min-height: 320px;"></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Battery Power Dispatch: Rule-Based vs Forecast-Assisted PPO</span>
+            <span class="chart-badge">Power Flow [+ Discharging, - Charging]</span>
+          </div>
+          <div id="chart-battery-power" class="chart-container" style="min-height: 320px;"></div>
+        </div>
+      </div>
+
+      <!-- Row 2: SOC Trajectory & Grid Import -->
+      <div class="chart-grid-2">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Battery State of Charge (SOC) Trajectory</span>
+            <span class="chart-badge">20% Min & 90% Max Safe Limits</span>
+          </div>
+          <div id="chart-battery-soc" class="chart-container" style="min-height: 320px;"></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Utility Grid Import Power & Peak Shaving</span>
+            <span class="chart-badge">Peak Hours Shaved (17:00 - 22:00)</span>
+          </div>
+          <div id="chart-grid-power" class="chart-container" style="min-height: 320px;"></div>
+        </div>
+      </div>
+
+      <!-- Row 3: Tariff Response & Cumulative Cost Progression -->
+      <div class="chart-grid-2">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Time-of-Use Electricity Tariff vs Grid Import</span>
+            <span class="chart-badge">Dynamic TOU Arbitrage Response</span>
+          </div>
+          <div id="chart-tariff-grid" class="chart-container" style="min-height: 320px;"></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Cumulative Cost Divergence & Final Total Cost</span>
+            <span class="chart-badge">Economic Optimization Curve</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px;">
+            <div id="chart-cumulative-cost" class="chart-container" style="min-height: 320px;"></div>
+            <div id="chart-cost-bar" class="chart-container" style="min-height: 320px;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==============================================================================
+         TAB 2: ENERGY FLOW & DECISION INSPECTOR
+         ============================================================================== -->
+    <div id="tab-energy-flow" class="tab-pane">
+      <div class="flow-container" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h3 style="font-size: 16px; margin: 0 0 4px 0; color: #fff;">Interactive Microgrid Energy Flow</h3>
+            <span style="font-size: 12px; color: #94a3b8;">Real-Time Power Routing Across Utility Grid, Solar PV, 5 kWh Battery Storage & Load</span>
+          </div>
+          <div class="status-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">
+            <span class="pulse-dot" style="background: #38bdf8;"></span> Live Synced with Scrubber
+          </div>
+        </div>
+        
+        <div class="flow-nodes-wrapper">
+          <!-- Flow SVG with Animated Directed Paths -->
+          <svg class="flow-svg" viewBox="0 0 900 380">
+            <!-- Solar to Load -->
+            <path id="path-solar-load" class="flow-path" d="M 450 70 L 730 180" />
+            <!-- Solar to Battery -->
+            <path id="path-solar-batt" class="flow-path" d="M 450 70 L 170 180" />
+            <!-- Battery to Load -->
+            <path id="path-batt-load" class="flow-path" d="M 170 200 L 730 200" />
+            <!-- Grid to Load -->
+            <path id="path-grid-load" class="flow-path" d="M 450 310 L 730 220" />
+            <!-- Grid to Battery -->
+            <path id="path-grid-batt" class="flow-path" d="M 450 310 L 170 220" />
+          </svg>
+
+          <!-- Node: Solar PV -->
+          <div class="flow-node solar">
+            <div class="node-title" style="color: var(--accent-solar);">Solar PV</div>
+            <div id="flow-val-solar" class="node-power">0.00 kW</div>
+          </div>
+
+          <!-- Node: Battery Storage -->
+          <div class="flow-node battery">
+            <div class="node-title" style="color: var(--accent-battery);">Battery BESS (5 kWh)</div>
+            <div id="flow-val-batt" class="node-power">0.00 kW</div>
+            <div class="soc-gauge-container">
+              <div class="soc-bar-outer">
+                <div id="playback-soc-bar" class="soc-bar-inner" style="width: 50%;"></div>
+              </div>
+              <span id="playback-soc-text" style="font-size: 11px; font-weight: 700; color: #38bdf8;">50%</span>
+            </div>
+          </div>
+
+          <!-- Node: Electrical Load -->
+          <div class="flow-node load">
+            <div class="node-title" style="color: var(--accent-load);">Household Load</div>
+            <div id="flow-val-load" class="node-power">0.00 kW</div>
+          </div>
+
+          <!-- Node: Utility Grid -->
+          <div class="flow-node grid">
+            <div class="node-title" style="color: var(--text-dim);">Utility Grid</div>
+            <div id="flow-val-grid" class="node-power">0.00 kW</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step-by-Step Decision Inspector -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Step-by-Step Decision Inspector & Interpretable Strategy Analysis</span>
+          <span class="chart-badge" id="exp-timestamp" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">Step Timestamp</span>
+        </div>
+
+        <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 20px;">
+          <div class="card">
+            <div class="metric-title">Household Demand</div>
+            <div id="exp-load" class="metric-value">-- kW</div>
+          </div>
+          <div class="card">
+            <div class="metric-title">Solar PV Generation</div>
+            <div id="exp-solar" class="metric-value">-- kW</div>
+          </div>
+          <div class="card">
+            <div class="metric-title">Battery Current SOC</div>
+            <div id="exp-soc" class="metric-value">--%</div>
+          </div>
+          <div class="card">
+            <div class="metric-title">Current Tariff Rate</div>
+            <div id="exp-tariff" class="metric-value" style="color: #a855f7;">--</div>
+          </div>
+        </div>
+
+        <!-- 3-Way Side-by-Side Decision Comparison Cards -->
+        <div class="decision-comparison-box">
+          <div class="decision-card rb">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <h4 style="color: var(--accent-rb); margin: 0;">Conventional Rule-Based EMS</h4>
+              <span class="badge-neutral">Baseline Heuristic</span>
+            </div>
+            <div style="font-size: 13.5px; margin-bottom: 6px;">Action: <strong id="exp-rb-action">--</strong></div>
+            <div style="font-size: 13.5px; margin-bottom: 6px;">Grid Draw: <strong id="exp-rb-grid" style="color: #f87171;">-- kW</strong></div>
+            <div style="font-size: 13.5px; margin-bottom: 10px;">Step Cost: <strong id="exp-rb-cost">Rs. --</strong></div>
+            <p id="exp-rb-desc" style="font-size: 12.5px; color: var(--text-muted); line-height: 1.5;"></p>
+          </div>
+
+          <div class="decision-card ppo">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <h4 style="color: var(--accent-ppo); margin: 0;">Forecast-Assisted PPO</h4>
+              <span class="badge-winner">Continuous Policy</span>
+            </div>
+            <div style="font-size: 13.5px; margin-bottom: 6px;">Action: <strong id="exp-ppo-action">--</strong></div>
+            <div style="font-size: 13.5px; margin-bottom: 6px;">Grid Draw: <strong id="exp-ppo-grid" style="color: #34d399;">-- kW</strong></div>
+            <div style="font-size: 13.5px; margin-bottom: 10px;">Step Cost: <strong id="exp-ppo-cost">Rs. --</strong></div>
+            <p id="exp-ppo-desc" style="font-size: 12.5px; color: #cbd5e1; line-height: 1.5;"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==============================================================================
+         TAB 3: ML GENERATION & LOAD FORECASTING
+         ============================================================================== -->
+    <div id="tab-forecasting" class="tab-pane">
+      <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 20px;">
+        <div class="card">
+          <div class="metric-title" style="color: var(--accent-solar);">Solar Model MAE</div>
+          <div id="solar-mae" class="metric-value">-- kW</div>
+          <div class="metric-sub">Mean Absolute Error</div>
+        </div>
+        <div class="card">
+          <div class="metric-title" style="color: var(--accent-solar);">Solar Model RMSE</div>
+          <div id="solar-rmse" class="metric-value">-- kW</div>
+          <div class="metric-sub">Root Mean Squared Error</div>
+        </div>
+        <div class="card">
+          <div class="metric-title" style="color: var(--accent-solar);">Solar Model R² Score</div>
+          <div id="solar-r2" class="metric-value">--</div>
+          <div class="metric-sub">Coefficient of Determination</div>
+        </div>
+        <div class="card">
+          <div class="metric-title" style="color: var(--accent-load);">Load Model MAE</div>
+          <div id="load-mae" class="metric-value">-- kW</div>
+          <div class="metric-sub">Mean Absolute Error</div>
+        </div>
+        <div class="card">
+          <div class="metric-title" style="color: var(--accent-load);">Load Model RMSE</div>
+          <div id="load-rmse" class="metric-value">-- kW</div>
+          <div class="metric-sub">Root Mean Squared Error</div>
+        </div>
+        <div class="card">
+          <div class="metric-title" style="color: var(--accent-load);">Load Model MAPE</div>
+          <div id="load-mape" class="metric-value">--%</div>
+          <div class="metric-sub">Mean Absolute % Error</div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom: 20px;">
+        <div class="chart-header">
+          <span class="chart-title">Short-Term Solar PV Generation Forecasting (XGBoost)</span>
+          <span class="chart-badge">P_solar,t+1 Predictions</span>
+        </div>
+        <div id="chart-solar-forecast" class="chart-container"></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Short-Term Electrical Demand Forecasting (XGBoost)</span>
+          <span class="chart-badge">P_load,t+1 Predictions</span>
+        </div>
+        <div id="chart-load-forecast" class="chart-container"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Application Scripts -->
+  <script src="js/api.js?v=3.0"></script>
+  <script src="js/charts.js?v=3.0"></script>
+  <script src="js/simulation.js?v=3.0"></script>
+  <script src="js/dashboard.js?v=3.0"></script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+{
+  "model_loading": {
+    "ppo": {
+      "status": "OK",
+      "path": "models/ppo/ppo_smart_ems.zip",
+      "size_bytes": 154393,
+      "class": "PPO",
+      "param_fingerprint": -0.22734111547470093
+    },
+    "sac": {
+      "status": "OK",
+      "path": "models/sac/sac_smart_ems.zip",
+      "size_bytes": 3112027,
+      "class": "SAC",
+      "param_fingerprint": 0.8418501615524292
+    },
+    "td3": {
+      "status": "OK",
+      "path": "models/td3/td3_smart_ems.zip",
+      "size_bytes": 6095708,
+      "class": "TD3",
+      "param_fingerprint": 0.8131126761436462
+    },
+    "dqn": {
+      "status": "OK",
+      "path": "models/dqn/dqn_smart_ems.zip",
+      "size_bytes": 117422,
+      "class": "DQN",
+      "param_fingerprint": -0.7280614376068115
+    }
+  },
+  "action_differences": {
+    "ppo_vs_sac": {
+      "mad_raw": 0.2946,
+      "mad_exec_kw": 0.4002,
+      "pct_same": 38.5
+    },
+    "ppo_vs_td3": {
+      "mad_raw": 0.3142,
+      "mad_exec_kw": 0.3609,
+      "pct_same": 46.9
+    },
+    "ppo_vs_dqn": {
+      "mad_raw": 0.2346,
+      "mad_exec_kw": 0.2792,
+      "pct_same": 45.8
+    },
+    "sac_vs_td3": {
+      "mad_raw": 0.1416,
+      "mad_exec_kw": 0.2038,
+      "pct_same": 58.3
+    },
+    "sac_vs_dqn": {
+      "mad_raw": 0.3021,
+      "mad_exec_kw": 0.4305,
+      "pct_same": 41.7
+    },
+    "td3_vs_dqn": {
+      "mad_raw": 0.3253,
+      "mad_exec_kw": 0.4142,
+      "pct_same": 43.8
+    }
+  },
+  "clipping": {
+    "ppo": {
+      "count": 8,
+      "pct": 8.33
+    },
+    "sac": {
+      "count": 23,
+      "pct": 23.96
+    },
+    "td3": {
+      "count": 30,
+      "pct": 31.25
+    },
+    "dqn": {
+      "count": 10,
+      "pct": 10.42
+    }
+  },
+  "obs_consistency": {
+    "ppo_vs_sac_obs0_maxdiff": 0.0,
+    "ppo_vs_td3_obs0_maxdiff": 0.0,
+    "ppo_vs_dqn_obs0_maxdiff": 0.0
+  },
+  "single_state_tests": {
+    "A_high_tariff_high_soc": {
+      "ppo": {
+        "raw": 0.8836,
+        "req_kw": 1.5,
+        "exec_kw": 1.5,
+        "clip": "none"
+      },
+      "sac": {
+        "raw": 0.5711,
+        "req_kw": 1.5,
+        "exec_kw": 1.5,
+        "clip": "none"
+      },
+      "td3": {
+        "raw": 0.719,
+        "req_kw": 1.5,
+        "exec_kw": 1.5,
+        "clip": "none"
+      },
+      "dqn": {
+        "raw": 0.2,
+        "req_kw": 0.9,
+        "exec_kw": 0.9,
+        "clip": "none"
+      }
+    },
+    "B_low_tariff_med_soc": {
+      "ppo": {
+        "raw": 0.2749,
+        "req_kw": 0.4123,
+        "exec_kw": 0.4123,
+        "clip": "none"
+      },
+      "sac": {
+        "raw": -0.4882,
+        "req_kw": -0.7323,
+        "exec_kw": -0.7323,
+        "clip": "none"
+      },
+      "td3": {
+        "raw": -0.0888,
+        "req_kw": -0.1332,
+        "exec_kw": -0.1332,
+        "clip": "none"
+      },
+      "dqn": {
+        "raw": -0.2,
+        "req_kw": -0.3,
+        "exec_kw": -0.3,
+        "clip": "none"
+      }
+    },
+    "C_solar_surplus": {
+      "ppo": {
+        "raw": -0.6833,
+        "req_kw": 0.0,
+        "exec_kw": 0.0,
+        "clip": "idle_or_hightar"
+      },
+      "sac": {
+        "raw": -0.9768,
+        "req_kw": 0.0,
+        "exec_kw": 0.0,
+        "clip": "idle_or_hightar"
+      },
+      "td3": {
+        "raw": -0.9806,
+        "req_kw": 0.0,
+        "exec_kw": 0.0,
+        "clip": "idle_or_hightar"
+      },
+      "dqn": {
+        "raw": -0.6,
+        "req_kw": 0.0,
+        "exec_kw": 0.0,
+        "clip": "idle_or_hightar"
+      }
+    },
+    "D_near_min_soc": {
+      "ppo": {
+        "raw": -0.38,
+        "req_kw": 0.0,
+        "exec_kw": 0.0,
+        "clip": "idle_or_hightar"
+      },
+      "sac": {
+        "raw": -0.6659,
+        "req_kw": 0.0,
+        "exec_kw": 0.0,
+        "clip": "idle_or_hightar"
+      },
+      "td3": {
+        "raw": -0.1047,
+        "req_kw": 0.0,
+        "exec_kw": 0.0,
+        "clip": "idle_or_hightar"
+      },
+      "dqn": {
+        "raw": 0.2,
+        "req_kw": 0.228,
+        "exec_kw": 0.228,
+        "clip": "none"
+      }
+    }
+  },
+  "solar_override_pct": 32.29166666666667,
+  "n_diagnostic_steps": 96
+}

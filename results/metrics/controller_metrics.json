@@ -1,0 +1,126 @@
+{
+  "rule_based": {
+    "controller": "Rule-Based EMS",
+    "total_electricity_cost": 727.91,
+    "adjusted_electricity_cost": 740.36,
+    "terminal_energy_credit": -0.15,
+    "grid_energy_consumed_kwh": 55.14,
+    "solar_energy_available_kwh": 71.08,
+    "solar_energy_used_kwh": 71.08,
+    "solar_utilization_pct": 100.0,
+    "battery_throughput_kwh": 35.89,
+    "peak_grid_demand_kw": 0.66,
+    "final_battery_soc": 0.2542,
+    "initial_battery_soc": 0.5,
+    "soc_violations": 0,
+    "unserved_energy_kwh": 0.0,
+    "total_timesteps": 1344,
+    "total_electricity_cost_usd": 8.77,
+    "adjusted_electricity_cost_usd": 8.92
+  },
+  "ppo": {
+    "controller": "Forecast-Assisted PPO",
+    "total_electricity_cost": 420.81,
+    "adjusted_electricity_cost": 408.36,
+    "terminal_energy_credit": 0.15,
+    "grid_energy_consumed_kwh": 62.96,
+    "solar_energy_available_kwh": 71.08,
+    "solar_energy_used_kwh": 67.27,
+    "solar_utilization_pct": 94.65,
+    "battery_throughput_kwh": 66.98,
+    "peak_grid_demand_kw": 0.79,
+    "final_battery_soc": 0.7388,
+    "initial_battery_soc": 0.5,
+    "soc_violations": 0,
+    "unserved_energy_kwh": 0.0,
+    "total_timesteps": 1344,
+    "total_electricity_cost_usd": 5.07,
+    "adjusted_electricity_cost_usd": 4.92
+  },
+  "selected_best_rl": "ppo",
+  "selected_best_rl_name": "Forecast-Assisted PPO",
+  "comparison": {
+    "electricity_cost": {
+      "metric": "Electricity Cost",
+      "unit": "Rs.",
+      "rule_based": 727.91,
+      "ppo": 420.81,
+      "difference": 307.1,
+      "percent_change": 42.19,
+      "better": "ppo"
+    },
+    "adjusted_cost": {
+      "metric": "Terminal-Adjusted Cost",
+      "unit": "Rs.",
+      "rule_based": 740.36,
+      "ppo": 408.36,
+      "difference": 332.0,
+      "percent_change": 44.84,
+      "better": "ppo"
+    },
+    "grid_energy": {
+      "metric": "Grid Energy Consumed",
+      "unit": "kWh",
+      "rule_based": 55.14,
+      "ppo": 62.96,
+      "difference": -7.82,
+      "percent_change": -14.18,
+      "better": "rule_based"
+    },
+    "solar_utilization": {
+      "metric": "Solar Utilization",
+      "unit": "%",
+      "rule_based": 100.0,
+      "ppo": 94.65,
+      "difference": -5.35,
+      "percent_change": -5.35,
+      "better": "rule_based"
+    },
+    "battery_throughput": {
+      "metric": "Battery Throughput",
+      "unit": "kWh",
+      "rule_based": 35.89,
+      "ppo": 66.98,
+      "difference": 31.09,
+      "percent_change": 86.63,
+      "better": "rule_based"
+    },
+    "peak_grid_demand": {
+      "metric": "Peak Grid Demand",
+      "unit": "kW",
+      "rule_based": 0.66,
+      "ppo": 0.79,
+      "difference": -0.13,
+      "percent_change": -19.7,
+      "better": "rule_based"
+    },
+    "final_soc": {
+      "metric": "Final Battery SOC",
+      "unit": "%",
+      "rule_based": 25.4,
+      "ppo": 73.9,
+      "difference": 48.5,
+      "percent_change": 0.0,
+      "better": "neutral"
+    },
+    "soc_violations": {
+      "metric": "SOC Violations",
+      "unit": "count",
+      "rule_based": 0,
+      "ppo": 0,
+      "difference": 0,
+      "percent_change": 0.0,
+      "better": "ppo"
+    },
+    "unserved_energy": {
+      "metric": "Unserved Energy",
+      "unit": "kWh",
+      "rule_based": 0.0,
+      "ppo": 0.0,
+      "difference": 0.0,
+      "percent_change": 0.0,
+      "better": "neutral"
+    },
+    "narrative_summary": "Forecast-Assisted PPO reduced total electricity expenditure by Rs. 307.10 (42.2% savings). PPO utilized 31.09 kWh additional battery cycling to capitalize on tariff arbitrage."
+  }
+}

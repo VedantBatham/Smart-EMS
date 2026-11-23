@@ -1,0 +1,72 @@
+{
+  "Rule-Based EMS": {
+    "flags": {
+      "significant_overnight_grid_charging": false,
+      "high_soc_before_10am": false,
+      "low_headroom_midday": true,
+      "midday_solar_curtailment": true,
+      "solar_to_battery_lower_than_expected": false,
+      "grid_energy_higher_than_baseline": false,
+      "total_cost_exceeds_baseline": false
+    },
+    "flags_triggered_count": 2,
+    "pattern_detected": false,
+    "pattern_label": "Normal operation"
+  },
+  "PPO": {
+    "flags": {
+      "significant_overnight_grid_charging": false,
+      "high_soc_before_10am": false,
+      "low_headroom_midday": true,
+      "midday_solar_curtailment": true,
+      "solar_to_battery_lower_than_expected": true,
+      "grid_energy_higher_than_baseline": true,
+      "total_cost_exceeds_baseline": true
+    },
+    "flags_triggered_count": 5,
+    "pattern_detected": true,
+    "pattern_label": "Possible excessive tariff-arbitrage / solar-crowding policy"
+  },
+  "SAC": {
+    "flags": {
+      "significant_overnight_grid_charging": true,
+      "high_soc_before_10am": false,
+      "low_headroom_midday": true,
+      "midday_solar_curtailment": true,
+      "solar_to_battery_lower_than_expected": true,
+      "grid_energy_higher_than_baseline": true,
+      "total_cost_exceeds_baseline": true
+    },
+    "flags_triggered_count": 6,
+    "pattern_detected": true,
+    "pattern_label": "Possible excessive tariff-arbitrage / solar-crowding policy"
+  },
+  "TD3": {
+    "flags": {
+      "significant_overnight_grid_charging": true,
+      "high_soc_before_10am": false,
+      "low_headroom_midday": true,
+      "midday_solar_curtailment": true,
+      "solar_to_battery_lower_than_expected": true,
+      "grid_energy_higher_than_baseline": true,
+      "total_cost_exceeds_baseline": true
+    },
+    "flags_triggered_count": 6,
+    "pattern_detected": true,
+    "pattern_label": "Possible excessive tariff-arbitrage / solar-crowding policy"
+  },
+  "DQN": {
+    "flags": {
+      "significant_overnight_grid_charging": true,
+      "high_soc_before_10am": false,
+      "low_headroom_midday": true,
+      "midday_solar_curtailment": true,
+      "solar_to_battery_lower_than_expected": true,
+      "grid_energy_higher_than_baseline": true,
+      "total_cost_exceeds_baseline": true
+    },
+    "flags_triggered_count": 6,
+    "pattern_detected": true,
+    "pattern_label": "Possible excessive tariff-arbitrage / solar-crowding policy"
+  }
+}

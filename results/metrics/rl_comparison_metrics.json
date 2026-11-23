@@ -1,0 +1,166 @@
+{
+  "selected_best_rl": "ppo",
+  "selected_best_rl_name": "Forecast-Assisted PPO",
+  "rule_based": {
+    "controller": "Rule-Based EMS",
+    "total_electricity_cost": 727.91,
+    "adjusted_electricity_cost": 740.36,
+    "terminal_energy_credit": -0.15,
+    "grid_energy_consumed_kwh": 55.14,
+    "solar_energy_available_kwh": 71.08,
+    "solar_energy_used_kwh": 71.08,
+    "solar_utilization_pct": 100.0,
+    "battery_throughput_kwh": 35.89,
+    "peak_grid_demand_kw": 0.66,
+    "final_battery_soc": 0.2542,
+    "initial_battery_soc": 0.5,
+    "soc_violations": 0,
+    "unserved_energy_kwh": 0.0,
+    "total_timesteps": 1344,
+    "total_electricity_cost_usd": 8.77,
+    "adjusted_electricity_cost_usd": 8.92
+  },
+  "ppo": {
+    "controller": "Forecast-Assisted PPO",
+    "total_electricity_cost": 420.81,
+    "adjusted_electricity_cost": 408.36,
+    "terminal_energy_credit": 0.15,
+    "grid_energy_consumed_kwh": 62.96,
+    "solar_energy_available_kwh": 71.08,
+    "solar_energy_used_kwh": 67.27,
+    "solar_utilization_pct": 94.65,
+    "battery_throughput_kwh": 66.98,
+    "peak_grid_demand_kw": 0.79,
+    "final_battery_soc": 0.7388,
+    "initial_battery_soc": 0.5,
+    "soc_violations": 0,
+    "unserved_energy_kwh": 0.0,
+    "total_timesteps": 1344,
+    "total_electricity_cost_usd": 5.07,
+    "adjusted_electricity_cost_usd": 4.92
+  },
+  "hybrid_dqn_ppo": {},
+  "best_rl": {
+    "controller": "Forecast-Assisted PPO",
+    "total_electricity_cost": 420.81,
+    "adjusted_electricity_cost": 408.36,
+    "terminal_energy_credit": 0.15,
+    "grid_energy_consumed_kwh": 62.96,
+    "solar_energy_available_kwh": 71.08,
+    "solar_energy_used_kwh": 67.27,
+    "solar_utilization_pct": 94.65,
+    "battery_throughput_kwh": 66.98,
+    "peak_grid_demand_kw": 0.79,
+    "final_battery_soc": 0.7388,
+    "initial_battery_soc": 0.5,
+    "soc_violations": 0,
+    "unserved_energy_kwh": 0.0,
+    "total_timesteps": 1344,
+    "total_electricity_cost_usd": 5.07,
+    "adjusted_electricity_cost_usd": 4.92
+  },
+  "comparison_table": {
+    "rows": [
+      {
+        "metric": "Electricity Cost",
+        "unit": "Rs.",
+        "rule_based": 727.91,
+        "ppo": 420.81,
+        "best_controller": "ppo",
+        "best_rl_controller": "ppo",
+        "difference": 307.1,
+        "percent_change": 42.19,
+        "better": "ppo"
+      },
+      {
+        "metric": "Terminal-Adjusted Cost",
+        "unit": "Rs.",
+        "rule_based": 740.36,
+        "ppo": 408.36,
+        "best_controller": "ppo",
+        "best_rl_controller": "ppo",
+        "difference": 332.0,
+        "percent_change": 44.84,
+        "better": "ppo"
+      }
+    ],
+    "metrics_map": {
+      "electricity_cost": {
+        "metric": "Electricity Cost",
+        "unit": "Rs.",
+        "rule_based": 727.91,
+        "ppo": 420.81,
+        "best_controller": "ppo",
+        "best_rl_controller": "ppo",
+        "difference": 307.1,
+        "percent_change": 42.19,
+        "better": "ppo"
+      },
+      "terminal_adjusted_cost": {
+        "metric": "Terminal-Adjusted Cost",
+        "unit": "Rs.",
+        "rule_based": 740.36,
+        "ppo": 408.36,
+        "best_controller": "ppo",
+        "best_rl_controller": "ppo",
+        "difference": 332.0,
+        "percent_change": 44.84,
+        "better": "ppo"
+      }
+    },
+    "narrative_summary": "Controlled benchmark under identical microgrid conditions. The PPO controller optimizes electricity cost to Rs. 420.81 (saving 42.2% vs Rule-Based baseline Rs. 727.91). Zero SOC violations and zero unserved load maintained across all timesteps.",
+    "electricity_cost": {
+      "metric": "Electricity Cost",
+      "unit": "Rs.",
+      "rule_based": 727.91,
+      "ppo": 420.81,
+      "best_controller": "ppo",
+      "best_rl_controller": "ppo",
+      "difference": 307.1,
+      "percent_change": 42.19,
+      "better": "ppo"
+    },
+    "adjusted_cost": {
+      "metric": "Terminal-Adjusted Cost",
+      "unit": "Rs.",
+      "rule_based": 740.36,
+      "ppo": 408.36,
+      "best_controller": "ppo",
+      "best_rl_controller": "ppo",
+      "difference": 332.0,
+      "percent_change": 44.84,
+      "better": "ppo"
+    },
+    "grid_energy": {},
+    "solar_utilization": {},
+    "battery_throughput": {},
+    "peak_grid_demand": {},
+    "final_soc": {},
+    "soc_violations": {},
+    "unserved_energy": {}
+  },
+  "comparison": {
+    "electricity_cost": {
+      "metric": "Electricity Cost",
+      "unit": "Rs.",
+      "rule_based": 727.91,
+      "ppo": 420.81,
+      "best_controller": "ppo",
+      "best_rl_controller": "ppo",
+      "difference": 307.1,
+      "percent_change": 42.19,
+      "better": "ppo"
+    },
+    "terminal_adjusted_cost": {
+      "metric": "Terminal-Adjusted Cost",
+      "unit": "Rs.",
+      "rule_based": 740.36,
+      "ppo": 408.36,
+      "best_controller": "ppo",
+      "best_rl_controller": "ppo",
+      "difference": 332.0,
+      "percent_change": 44.84,
+      "better": "ppo"
+    }
+  }
+}

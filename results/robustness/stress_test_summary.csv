@@ -1,0 +1,6 @@
+scenario,scenario_type,initial_soc,rule_based_cost,ppo_cost,cost_difference,ppo_savings_pct,rule_based_grid_kwh,ppo_grid_kwh,rule_based_solar_pct,ppo_solar_pct,rule_based_final_soc,ppo_final_soc
+High-Load Day (+30% Demand),high_load,0.5,108.13,118.2,10.07,-9.31,16.25,19.48,89.8,78.0,20.0,47.8
+Low-Solar Overcast Day (-60% Solar),low_solar,0.5,117.06,109.94,-7.12,6.08,16.42,18.09,100.0,100.0,20.0,49.5
+Midday Cloud Drop (70% Dip 12-14h),cloud_event,0.5,70.28,81.15,10.87,-15.47,10.84,14.25,98.5,82.9,20.0,49.5
+Evening Demand Surge (+40% Peak),evening_surge,0.5,98.16,108.93,10.77,-10.97,13.6,16.98,79.2,66.8,20.0,49.3
+Low Battery Reserve (SOC_0 = 20%),low_initial_soc,0.2,73.77,85.01,11.24,-15.24,12.11,15.64,79.2,66.9,20.0,49.5

@@ -1,0 +1,76 @@
+battery:
+  capacity_kwh: 12.5
+  charge_efficiency: 0.95
+  discharge_efficiency: 0.95
+  initial_soc: 0.5
+  max_charge_kw: 2.5
+  max_discharge_kw: 2.5
+  max_soc: 0.9
+  min_soc: 0.2
+  target_terminal_soc: 0.5
+grid:
+  allow_grid_charging: true
+  allow_grid_export: true
+paths:
+  comparison_results: data/results/comparison_results.csv
+  load_model: models/load_xgb.pkl
+  metrics_dir: results/metrics
+  plots_dir: results/plots
+  ppo_model: models/forecast_ppo_ems.zip
+  ppo_results: data/results/ppo_results.csv
+  processed_data: data/processed/energy_data.csv
+  raw_data: data/raw/household_data.csv
+  rule_based_results: data/results/rule_based_results.csv
+  solar_model: models/solar_xgb.pkl
+  test_data: data/processed/test_data.csv
+  train_data: data/processed/train_data.csv
+  training_dir: results/training
+  val_data: data/processed/validation_data.csv
+rl:
+  batch_size: 64
+  clip_range: 0.2
+  ent_coef: 0.01
+  gae_lambda: 0.95
+  gamma: 0.99
+  learning_rate: 0.0003
+  n_steps: 2048
+  total_timesteps: 100000
+  weight_battery_degradation: 0.02
+  weight_curtailment: 2.0
+  weight_soc_violation: 15.0
+  weight_solar_crowding: 2.5
+  weight_terminal_soc: 10.0
+  weight_unserved_load: 60.0
+scenario_randomization:
+  cloud_event_probability: 0.35
+  demand_spike_probability: 0.25
+  enabled: true
+  forecast_noise_std_load: 0.08
+  forecast_noise_std_solar: 0.05
+  initial_soc_max: 0.8
+  initial_soc_min: 0.3
+  load_scaling_max: 1.2
+  load_scaling_min: 0.8
+  peak_shift_max_steps: 2
+  solar_scaling_max: 1.1
+  solar_scaling_min: 0.7
+simulation:
+  currency_symbol: "\xE2\u201A\xB9"
+  random_seed: 42
+  steps_per_day: 96
+  time_step_hours: 0.25
+tariff:
+  currency: INR
+  slots:
+  - end_hour: 17
+    label: Off-Peak Hours
+    rate: 0.08
+    start_hour: 0
+  - end_hour: 22
+    label: Evening Peak Hours
+    rate: 0.3
+    start_hour: 17
+  - end_hour: 24
+    label: Off-Peak Hours
+    rate: 0.08
+    start_hour: 22

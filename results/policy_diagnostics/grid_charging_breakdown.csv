@@ -1,0 +1,6 @@
+controller,total_grid_to_battery_energy_kwh,total_cost_of_grid_charging_rs,pct_grid_energy_for_battery,pct_electricity_cost_from_grid_charging,grid_charging_00_06_kwh,grid_charging_06_10_kwh,grid_charging_10_16_kwh,flag_grid_charge_during_solar
+Rule-Based EMS,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False
+PPO,0.403,1.58,3.13,1.87,0.126,0.0,0.0,False
+SAC,4.384,17.13,28.94,19.4,1.918,0.114,0.0,False
+TD3,4.739,19.24,31.73,21.04,1.763,0.298,0.0,False
+DQN,0.6,1.8,4.54,2.04,0.6,0.0,0.0,False

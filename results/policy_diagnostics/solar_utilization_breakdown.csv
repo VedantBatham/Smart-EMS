@@ -1,0 +1,6 @@
+controller,solar_available_energy_kwh,solar_to_load_energy_kwh,solar_to_battery_energy_kwh,solar_curtailed_energy_kwh,solar_utilization_pct,pct_solar_used_directly_by_load,pct_solar_stored_in_battery,pct_solar_curtailed
+Rule-Based EMS,15.481,8.063,4.198,3.22,79.2,52.08,27.12,20.8
+PPO,15.481,8.063,3.387,4.03,73.96,52.08,21.88,26.04
+SAC,15.481,8.063,2.537,4.881,68.47,52.08,16.39,31.53
+TD3,15.481,8.063,3.683,3.735,75.88,52.08,23.79,24.12
+DQN,15.481,8.063,3.143,4.275,72.39,52.08,20.3,27.61
